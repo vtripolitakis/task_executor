@@ -7,7 +7,7 @@ This Python script simulates different scenarios for running commands with vario
 To run the simulator, use the following command:
 
 ```
-python simulate.py scenarios.yaml
+python simulate.py ./scenarios/scenarios.yaml
 ```
 
 Where `scenarios.yaml` is the path to your YAML configuration file containing the scenarios you want to run.
@@ -58,6 +58,26 @@ The simulator supports four different scenario types:
      - `k`: Number of executions in each block
      - `max_delay`: Maximum delay in seconds after each block (delay will be random between 0 and this value)
 
+5. **Random Block Size with Fixed Delay**
+    - Type: random_block_size_fixed_delay
+    - Description: Runs the command in blocks of random size, with a fixed delay after each block.
+    - Parameters:
+      - `command`: The command to run
+      - `times`: Total number of times to run the command
+      - `max_block_size`: Maximum size of each block (block size will be random between 1 and this value)
+      - `fixed_delay`: Fixed delay in seconds after each block
+
+
+6. **Random Block Size with Random Delay**
+    - Type: random_block_size_random_delay
+    - Description: Runs the command in blocks of random size, with a random delay after each block.
+    - Parameters:
+      - `command`: The command to run
+      - `times`: Total number of times to run the command
+      - `max_block_size`: Maximum size of each block (block size will be random between 1 and this value)
+      - `max_delay`: Maximum delay in seconds after each block (delay will be random between 0 and this value)
+
+
 ## Example YAML Configuration
 
 ```yaml
@@ -86,3 +106,18 @@ scenarios:
     times: 4
     k: 3
     max_delay: 3
+
+  - name: "random_block_size_fixed_delay_scenario"
+    type: "random_block_size_fixed_delay"
+    command: "./print_timestamp.sh"
+    times: 12
+    max_block_size: 6
+    fixed_delay: 1  # seconds
+
+  - name: "random_block_size_random_delay_scenario"
+    type: "random_block_size_random_delay"
+    command: "./print_timestamp.sh"
+    times: 12
+    max_block_size: 4
+    max_delay: 6  # seconds
+```

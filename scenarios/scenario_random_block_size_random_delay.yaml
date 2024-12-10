@@ -1,0 +1,7 @@
+scenarios:
+  - name: "random_block_size_random_delay_scenario"
+    type: "random_block_size_random_delay"
+    command: "./print_timestamp.sh"
+    times: 12
+    max_block_size: 4
+    max_delay: 6  # seconds

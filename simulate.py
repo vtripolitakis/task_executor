@@ -116,6 +116,55 @@ def run_random_delay_block_scenario(command, times, k, max_delay):
             time.sleep(sleep_time)
 
 
+def run_random_block_size_fixed_delay_scenario(
+        command, times, max_block_size, fixed_delay):
+    """
+    Run a command repeatedly with a fixed delay between runs, but
+    grouped into blocks of random size.
+
+    Args:
+        command: the command to run
+        times: the number of times to run the command
+        max_block_size: the maximum size of the block of commands
+        fixed_delay: the fixed delay between blocks of commands
+
+    Returns:
+        None
+    """
+    block_size = 0
+    for i in range(times):
+        run_command(command)
+        block_size += 1
+        if block_size >= random.randint(1, max_block_size) and (i + 1) < times:
+            time.sleep(fixed_delay)
+            block_size = 0
+
+
+def run_random_block_size_random_delay_scenario(
+        command, times, max_block_size, max_delay):
+    """
+    Run a command repeatedly with a random delay between runs, but
+    grouped into blocks of random size.
+
+    Args:
+        command: the command to run
+        times: the number of times to run the command
+        max_block_size: the maximum size of the block of commands
+        max_delay: the maximum delay between blocks of commands
+
+    Returns:
+        None
+    """
+    block_size = 0
+    for i in range(times):
+        run_command(command)
+        block_size += 1
+        if block_size >= random.randint(1, max_block_size) and (i + 1) < times:
+            sleep_time = random.uniform(0, max_delay)
+            time.sleep(sleep_time)
+            block_size = 0
+
+
 def main(yaml_file):
     """
     Run a scenario from a YAML configuration file.
@@ -148,6 +197,16 @@ def main(yaml_file):
         elif scenario_type == "random_delay_block":
             run_random_delay_block_scenario(
                 command, times, scenario["k"], scenario["max_delay"]
+            )
+        elif scenario_type == "random_block_size_fixed_delay":
+            run_random_block_size_fixed_delay_scenario(
+                command, times,
+                scenario["max_block_size"], scenario["fixed_delay"]
+            )
+        elif scenario_type == "random_block_size_random_delay":
+            run_random_block_size_random_delay_scenario(
+                command, times,
+                scenario["max_block_size"], scenario["max_delay"]
             )
         else:
             print(f"Unknown scenario type: {scenario_type}")
