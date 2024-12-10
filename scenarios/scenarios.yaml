@@ -8,18 +8,18 @@ scenarios:
     type: "random_delay"
     command: "./print_timestamp.sh"
     times: 5
-    max_delay: 5  # seconds
+    max_delay: 4  # seconds
 
   - name: "fixed_delay_block_scenario"
     type: "fixed_delay_block"
     command: "./print_timestamp.sh"
-    times: 4
+    times: 12
     k: 3
     fixed_delay: 3  # seconds
 
   - name: "random_delay_block_scenario"
     type: "random_delay_block"
     command: "./print_timestamp.sh"
-    times: 4
+    times: 6
     k: 3
-    max_delay: 3  # seconds
+    max_delay: 5  # seconds
