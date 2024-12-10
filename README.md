@@ -18,12 +18,11 @@ Where `scenarios.yaml` is the path to your YAML configuration file containing th
 - PyYAML library
 
 ## Installation
-
-`pip install -r requirements.txt`
+Create a new virtual environment and run:  `pip install -r requirements.txt`
 
 ## Scenario Types
 
-The simulator supports four different scenario types:
+The simulator supports four different scenario types (listed below):
 
 1. **No Delay**
    - Type: `no_delay`
