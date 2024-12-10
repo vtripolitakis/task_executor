@@ -183,8 +183,7 @@ def main(yaml_file):
         command = scenario["command"]
         times = scenario["times"]
 
-        print(f"Running scenario: {
-            scenario.get('name', 'unnamed')} [{scenario_type}]")
+        print(f"Running scenario: {scenario.get('name', 'unnamed')} [{scenario_type}]")
 
         if scenario_type == "no_delay":
             run_no_delay_scenario(command, times)
