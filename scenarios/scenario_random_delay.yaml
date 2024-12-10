@@ -1,0 +1,6 @@
+ scenarios:
+  - name: "random_delay_scenario"
+    type: "random_delay"
+    command: "./print_timestamp.sh"
+    times: 5
+    max_delay: 5  # seconds

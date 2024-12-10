@@ -1,0 +1,7 @@
+scenarios:
+  - name: "fixed_delay_block_scenario"
+    type: "fixed_delay_block"
+    command: "./print_timestamp.sh"
+    times: 12
+    k: 4
+    fixed_delay: 4  # seconds

@@ -1,0 +1,25 @@
+scenarios:
+  - name: "no_delay_scenario"
+    type: "no_delay"
+    command: "./print_timestamp.sh"
+    times: 3
+
+  - name: "random_delay_scenario"
+    type: "random_delay"
+    command: "./print_timestamp.sh"
+    times: 5
+    max_delay: 5  # seconds
+
+  - name: "fixed_delay_block_scenario"
+    type: "fixed_delay_block"
+    command: "./print_timestamp.sh"
+    times: 4
+    k: 3
+    fixed_delay: 3  # seconds
+
+  - name: "random_delay_block_scenario"
+    type: "random_delay_block"
+    command: "./print_timestamp.sh"
+    times: 4
+    k: 3
+    max_delay: 3  # seconds
