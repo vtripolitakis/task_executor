@@ -121,7 +121,7 @@ class ProgressBar:
             return Colors.BLUE
         return Colors.GREEN
 
-    def update(self, current: int) -> None:
+    def update(self, current: int, delay: float) -> None:
         """Update progress bar display"""
         current_time = time.time()
         if current_time - self.last_update < 0.1 and current < self.total - 1:
@@ -141,7 +141,7 @@ class ProgressBar:
         eta_str = f"ETA: {int(eta)}s" if eta > 0 else "Complete"
 
         progress_line = (
-            f"{Colors.CYAN}▸ {self.scenario_name:<30}"
+            f"{Colors.CYAN}▸ {self.scenario_name:<30} :: run: {current+1} / {self.total} :: delay {delay:.3f}\" "
             f"{color}|{blocks}{empty}|{Colors.RESET} "
             f"{progress:>5.1f}% {Colors.TIME}@ {datetime.now().strftime('%H:%M:%S')} [{eta_str}]{Colors.RESET}"
         )
@@ -229,9 +229,9 @@ class ScenarioRunner:
 
             try:
                 await self.run_command(self.config.command)
-                self.progress.update(i)
-
                 delay = await self.calculate_delay(i)
+                self.progress.update(i, delay)
+
                 if delay > 0:
                     self.report.delay_times.append(delay)
                     await asyncio.sleep(delay)
@@ -309,6 +309,9 @@ class SimulationManager:
 
             print(
                 f"Scenario {i}/{total_scenarios}: {Colors.CYAN}{scenario_config.name}{Colors.RESET}"
+            )
+            print(
+                f"Command: {Colors.BLUE}{scenario_config.command}{Colors.RESET}"
             )
 
             runner = ScenarioRunner(scenario_config)
