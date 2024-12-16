@@ -1,6 +1,8 @@
  scenarios:
   - name: "random_delay_scenario"
     type: "random_delay"
+    pre_command: "./pre_command.sh"
     command: "./print_timestamp.sh"
+    post_command: "./post_command.sh"
     times: 5
     max_delay: 5  # seconds
