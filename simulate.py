@@ -21,7 +21,7 @@ from statistics import mean, median, stdev
 
 # Configure logging
 logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+    level=logging.INFO, format="%(asctime)s - %(pathname)s:%(lineno)d %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
 
@@ -61,6 +61,8 @@ class ScenarioConfig:
     type: str
     command: str
     times: int
+    post_command: Optional[str] = None
+    pre_command: Optional[str] = None
     max_delay: Optional[float] = None
     k: Optional[int] = None
     fixed_delay: Optional[float] = None
@@ -199,6 +201,25 @@ class ScenarioRunner:
             )
         return 0
 
+    async def run_pre_command(self) -> None:
+        """Run a command before main executor task starts"""
+
+        if self.config.pre_command and self.config.command != "":
+            print(f"\n{Colors.YELLOW}Running {self.config.name} pre command \
+{self.config.pre_command} {Colors.RESET}")
+
+            try:
+                await asyncio.get_event_loop().run_in_executor(
+                    self._executor,
+                    lambda: subprocess.run(
+                        self.config.pre_command, shell=True, check=True, capture_output=True
+                    ),
+                )
+            except subprocess.CalledProcessError as e:
+                logger.error(f"Command failed: {e.stderr.decode()}")
+                raise
+        return
+
     async def run_command(self, cmd: str) -> float:
         """Run a command and return execution time"""
         start_time = time.time()
@@ -218,6 +239,25 @@ class ScenarioRunner:
             execution_time = time.time() - start_time
             self.report.execution_times.append(execution_time)
         return execution_time
+
+    async def run_post_command(self) -> None:
+        """Run a command after main executor task ends"""
+
+        if self.config.post_command and self.config.command != "":
+            print(f"\n{Colors.YELLOW}Running {self.config.name} post command \
+{self.config.post_command} {Colors.RESET}")
+
+            try:
+                await asyncio.get_event_loop().run_in_executor(
+                    self._executor,
+                    lambda: subprocess.run(
+                        self.config.post_command, shell=True, check=True, capture_output=True
+                    ),
+                )
+            except subprocess.CalledProcessError as e:
+                logger.error(f"Command failed: {e.stderr.decode()}")
+                raise
+        return
 
     async def run(self) -> ScenarioReport:
         """Run the scenario and return report"""
@@ -242,6 +282,7 @@ class ScenarioRunner:
 
         self.report.end_time = datetime.now()
         self.print_scenario_report()
+
         return self.report
 
     def print_scenario_report(self) -> None:
@@ -306,6 +347,10 @@ class SimulationManager:
         for i, scenario_config in enumerate(scenarios, 1):
             if self._stop_event.is_set():
                 break
+            runner = ScenarioRunner(scenario_config)
+            self.runners.append(runner)
+
+            await runner.run_pre_command()
 
             print(
                 f"Scenario {i}/{total_scenarios}: {Colors.CYAN}{scenario_config.name}{Colors.RESET}"
@@ -314,10 +359,8 @@ class SimulationManager:
                 f"Command: {Colors.BLUE}{scenario_config.command}{Colors.RESET}"
             )
 
-            runner = ScenarioRunner(scenario_config)
-            self.runners.append(runner)
-
             report = await runner.run()
+            await runner.run_post_command()
             self.reports.append(report)
 
         self.print_final_report(start_time)
@@ -387,6 +430,7 @@ async def main() -> None:
 
     try:
         await manager.run_scenarios()
+
     except Exception as e:
         logger.error(f"Simulation failed: {str(e)}")
         sys.exit(1)
