@@ -30,6 +30,9 @@ The simulator supports four different scenario types (listed below):
    - Parameters:
      - `command`: The command to run
      - `times`: Number of times to run the command
+   - Optional Parameters
+     - `pre_command`: The command to run before scenario command runs
+     - `post_command`: The command to run after scenario command runs
 
 2. **Random Delay**
    - Type: `random_delay`
@@ -38,6 +41,9 @@ The simulator supports four different scenario types (listed below):
      - `command`: The command to run
      - `times`: Number of times to run the command
      - `max_delay`: Maximum delay in seconds (delay will be random between 0 and this value)
+   - Optional Parameters
+     - `pre_command`: The command to run before scenario command runs
+     - `post_command`: The command to run after scenario command runs
 
 3. **Fixed Delay Block**
    - Type: `fixed_delay_block`
@@ -47,6 +53,9 @@ The simulator supports four different scenario types (listed below):
      - `times`: Total number of times to run the command
      - `k`: Number of executions in each block
      - `fixed_delay`: Fixed delay in seconds after each block
+   - Optional Parameters
+     - `pre_command`: The command to run before scenario command runs
+     - `post_command`: The command to run after scenario command runs
 
 4. **Random Delay Block**
    - Type: `random_delay_block`
@@ -56,6 +65,9 @@ The simulator supports four different scenario types (listed below):
      - `times`: Total number of times to run the command
      - `k`: Number of executions in each block
      - `max_delay`: Maximum delay in seconds after each block (delay will be random between 0 and this value)
+   - Optional Parameters
+     - `pre_command`: The command to run before scenario command runs
+     - `post_command`: The command to run after scenario command runs
 
 5. **Random Block Size with Fixed Delay**
     - Type: random_block_size_fixed_delay
@@ -65,6 +77,9 @@ The simulator supports four different scenario types (listed below):
       - `times`: Total number of times to run the command
       - `max_block_size`: Maximum size of each block (block size will be random between 1 and this value)
       - `fixed_delay`: Fixed delay in seconds after each block
+   - Optional Parameters
+     - `pre_command`: The command to run before scenario command runs
+     - `post_command`: The command to run after scenario command runs
 
 
 6. **Random Block Size with Random Delay**
@@ -75,7 +90,9 @@ The simulator supports four different scenario types (listed below):
       - `times`: Total number of times to run the command
       - `max_block_size`: Maximum size of each block (block size will be random between 1 and this value)
       - `max_delay`: Maximum delay in seconds after each block (delay will be random between 0 and this value)
-
+   - Optional Parameters
+     - `pre_command`: The command to run before scenario command runs
+     - `post_command`: The command to run after scenario command runs
 
 ## Example YAML Configuration
 
@@ -83,39 +100,51 @@ The simulator supports four different scenario types (listed below):
 scenarios:
   - name: "no_delay_scenario"
     type: "no_delay"
+    pre_command: "./pre_command.sh"
     command: "./print_timestamp.sh"
+    post_command: "./post_command.sh"
     times: 3
 
   - name: "random_delay_scenario"
     type: "random_delay"
+    pre_command: "./pre_command.sh"
     command: "./print_timestamp.sh"
+    post_command: "./post_command.sh"
     times: 5
     max_delay: 5
 
   - name: "fixed_delay_block_scenario"
     type: "fixed_delay_block"
+    pre_command: "./pre_command.sh"
     command: "./print_timestamp.sh"
+    post_command: "./post_command.sh"
     times: 4
     k: 3
     fixed_delay: 3
 
   - name: "random_delay_block_scenario"
     type: "random_delay_block"
+    pre_command: "./pre_command.sh"
     command: "./print_timestamp.sh"
+    post_command: "./post_command.sh"
     times: 4
     k: 3
     max_delay: 3
 
   - name: "random_block_size_fixed_delay_scenario"
     type: "random_block_size_fixed_delay"
+    pre_command: "./pre_command.sh"
     command: "./print_timestamp.sh"
+    post_command: "./post_command.sh"
     times: 12
     max_block_size: 6
     fixed_delay: 1  # seconds
 
   - name: "random_block_size_random_delay_scenario"
     type: "random_block_size_random_delay"
+    pre_command: "./pre_command.sh"
     command: "./print_timestamp.sh"
+    post_command: "./post_command.sh"
     times: 12
     max_block_size: 4
     max_delay: 6  # seconds
